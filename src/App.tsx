@@ -65,72 +65,99 @@ function App() {
 	};
 
 	return (
-		<main className="h-screen w-screen bg-rootLevel text-text">
-			hello again
-			<form className="flex flex-col p-32 gap-5" onSubmit={handleSubmit(onSubmit)}>
-				<Input
-					type="number"
-					placeholder="What is the number of cars in your fleet?"
-					{...register('carCount', {
-						valueAsNumber: true,
-						required: { value: true, message: 'This field is required' },
-					})}
-				/>
-				<Input
-					type="number"
-					placeholder="What is the number of allowed yearly mileage in your leasing contracts?"
-					{...register('leasingContractYearlyMileageAllowed', {
-						valueAsNumber: true,
-						required: { value: true, message: 'This field is required' },
-					})}
-				/>
-				<Controller
-					name="restrictions"
-					control={control}
-					rules={{ required: true }}
-					render={() => (
-						<MultiSelect
-							options={restrictionOpts}
-							onValueChange={values => handleRestrictionChange(values as Restriction[])}
-							value={watchRestrictions}
-							placeholder="What are the restrictions you want to put in place in your car policy?"
-						/>
-					)}
-				/>
+		<main className="bg-chargePurple text-text font-sora">
+			<div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+				<div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+					<h1 className="text-2xl sm:text-3xl font-bold mb-6 text-white">Fleet Configuration</h1>
 
-				{hasMonthlyBudget && (
-					<Input
-						type="number"
-						placeholder="What's the monthly charging budget? (in €)"
-						{...register('monthlyChargingBudget', {
-							valueAsNumber: true,
-							required: { value: true, message: 'This field is required' },
-						})}
-					/>
-				)}
+					<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+						<div className="space-y-4">
+							<Input
+								type="number"
+								placeholder="What is the number of cars in your fleet?"
+								className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+								{...register('carCount', {
+									valueAsNumber: true,
+									required: { value: true, message: 'This field is required' },
+								})}
+							/>
 
-				{hasPriceCap && (
-					<Input
-						type="number"
-						placeholder="What's the price cap on kWh? (in €)"
-						{...register('kwhPriceCap', {
-							valueAsNumber: true,
-							validate: val => !hasPriceCap || !!val,
-						})}
-					/>
-				)}
+							<Input
+								type="number"
+								placeholder="What is the number of allowed yearly mileage in your leasing contracts?"
+								className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+								{...register('leasingContractYearlyMileageAllowed', {
+									valueAsNumber: true,
+									required: { value: true, message: 'This field is required' },
+								})}
+							/>
 
-				{watchRestrictions.includes('country_restriction') && (
-					<div>
-						<p>Which countries are allowed?</p>
-						{/* Add a multi-select component for European countries here */}
-					</div>
-				)}
+							<Controller
+								name="restrictions"
+								control={control}
+								rules={{ required: true }}
+								render={() => (
+									<MultiSelect
+										options={restrictionOpts}
+										onValueChange={values => handleRestrictionChange(values as Restriction[])}
+										value={watchRestrictions}
+										placeholder="What are the restrictions you want to put in place in your car policy?"
+										className="bg-white/20 border-white/30"
+									/>
+								)}
+							/>
+						</div>
 
-				{watchRestrictions.includes('fast_charging') && <div>Fast charging is blocked.</div>}
+						{hasMonthlyBudget && (
+							<div className="animate-fadeIn">
+								<Input
+									type="number"
+									placeholder="What's the monthly charging budget? (in €)"
+									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+									{...register('monthlyChargingBudget', {
+										valueAsNumber: true,
+										required: { value: true, message: 'This field is required' },
+									})}
+								/>
+							</div>
+						)}
 
-				<Button type="submit">Submit</Button>
-			</form>
+						{hasPriceCap && (
+							<div className="animate-fadeIn">
+								<Input
+									type="number"
+									placeholder="What's the price cap on kWh? (in €)"
+									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+									{...register('kwhPriceCap', {
+										valueAsNumber: true,
+										validate: val => !hasPriceCap || !!val,
+									})}
+								/>
+							</div>
+						)}
+
+						{watchRestrictions.includes('country_restriction') && (
+							<div className="animate-fadeIn rounded-lg bg-white/5 p-4">
+								<p className="text-white mb-3">Which countries are allowed?</p>
+								{/* Add a multi-select component for European countries here */}
+							</div>
+						)}
+
+						{watchRestrictions.includes('fast_charging') && (
+							<div className="animate-fadeIn rounded-lg bg-white/5 p-4 text-white">
+								Fast charging is blocked.
+							</div>
+						)}
+
+						<Button
+							type="submit"
+							className="mt-4 w-full sm:w-auto bg-white text-chargePurple hover:bg-white/90 transition-colors"
+						>
+							Calculate Savings
+						</Button>
+					</form>
+				</div>
+			</div>
 		</main>
 	);
 }

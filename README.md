@@ -23,9 +23,11 @@ pnpm run dev
 ## Serve it with jsDelivr
 
 ```html
-<link
-	rel="stylesheet"
-	href="https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta/dist/assets/index-DwrxFb8S.css"
-/>
-<script src="https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta/dist/assets/index-C1GwmcAG.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta/dist/assets/index.css" />
+<script src="https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta/dist/assets/index.js"></script>
+```
+
+```
+https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta/dist/assets/index.css
+https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta/dist/assets/index.js
 ```

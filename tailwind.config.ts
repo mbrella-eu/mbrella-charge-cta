@@ -13,7 +13,11 @@ const config = {
 			},
 		},
 		extend: {
+			fontFamily: {
+				sora: ['Sora', 'sans-serif'],
+			},
 			colors: {
+				chargePurple: '#2f243a',
 				rootLevel: '#1e2228',
 				secondLevel: '#2b3038',
 				thirdLevel: '#3d5266',
@@ -31,6 +35,15 @@ const config = {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)',
+			},
+			animation: {
+				fadeIn: 'fadeIn 0.3s ease-in-out',
+			},
+			keyframes: {
+				fadeIn: {
+					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' },
+				},
 			},
 		},
 	},
