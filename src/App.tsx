@@ -1,7 +1,6 @@
 import { BatteryWarning, HandCoins, MapPinned, PlugZap } from 'lucide-react';
-import { ComponentType, useState } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { Button } from './components/ui/button';
+import { ComponentType, useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Input } from './components/ui/input';
 import { MultiSelect } from './components/ui/multiselect';
 import { euroCountries } from './lib/euro_countries';
@@ -24,11 +23,30 @@ export type SalesWizardFormInput = {
 	kwhPriceCap?: number;
 };
 
+type SavingsResult = {
+	totalSavings: number;
+	totalFleetSavingsByBudget: number;
+	totalFleetSavingsByPriceCap: number;
+	savingsByCountryRestrictions: number;
+	fleetSavingsByFastChargeBlocking: number;
+};
+
 function App() {
-	const { register, control, watch, setValue, handleSubmit } = useForm<SalesWizardFormInput>({
+	const { register, control, watch, setValue } = useForm<SalesWizardFormInput>({
 		defaultValues: { restrictions: [], countryRestrictions: [] },
+		mode: 'onChange',
 	});
 	const [restrictionOpts, setRestrictionOpts] = useState(restrictionsOptionsInit);
+	const [savings, setSavings] = useState<SavingsResult | null>(null);
+
+	const watchedValues = watch();
+
+	useEffect(() => {
+		if (watchedValues.carCount && watchedValues.leasingContractYearlyMileageAllowed) {
+			const savingsResult = computeSavings(watchedValues);
+			setSavings(savingsResult);
+		}
+	}, [watchedValues]);
 
 	const watchRestrictions = watch('restrictions');
 
@@ -59,18 +77,13 @@ function App() {
 	const hasMonthlyBudget = watchRestrictions.includes('monthly_charging_budget');
 	const hasPriceCap = watchRestrictions.includes('kwh_price_cap');
 
-	const onSubmit: SubmitHandler<SalesWizardFormInput> = values => {
-		const savings = computeSavings(values);
-		console.log('total savings', savings.totalSavings);
-	};
-
 	return (
 		<main className="bg-chargePurple text-text font-sora">
 			<div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
 				<div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
 					<h1 className="text-2xl sm:text-3xl font-bold mb-6 text-white">Fleet Configuration</h1>
 
-					<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+					<div className="flex flex-col gap-6">
 						<div className="space-y-4">
 							<Input
 								type="number"
@@ -148,15 +161,70 @@ function App() {
 								Fast charging is blocked.
 							</div>
 						)}
-
-						<Button
-							type="submit"
-							className="mt-4 w-full sm:w-auto bg-white text-chargePurple hover:bg-white/90 transition-colors"
-						>
-							Calculate Savings
-						</Button>
-					</form>
+					</div>
 				</div>
+
+				{savings && (
+					<div className="mt-6 bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg animate-fadeIn">
+						<h2 className="text-xl font-bold mb-4 text-white">Estimated Savings</h2>
+						<div className="space-y-3">
+							<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+								<span className="text-white/80">Total Savings</span>
+								<span className="text-white font-bold">
+									€{savings.totalSavings.toLocaleString('en-EU', { maximumFractionDigits: 0 })}
+								</span>
+							</div>
+
+							{savings.totalFleetSavingsByBudget > 0 && (
+								<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+									<span className="text-white/80">Budget-based Savings</span>
+									<span className="text-white">
+										€
+										{savings.totalFleetSavingsByBudget.toLocaleString('en-EU', {
+											maximumFractionDigits: 0,
+										})}
+									</span>
+								</div>
+							)}
+
+							{savings.totalFleetSavingsByPriceCap > 0 && (
+								<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+									<span className="text-white/80">Price Cap Savings</span>
+									<span className="text-white">
+										€
+										{savings.totalFleetSavingsByPriceCap.toLocaleString('en-EU', {
+											maximumFractionDigits: 0,
+										})}
+									</span>
+								</div>
+							)}
+
+							{savings.savingsByCountryRestrictions > 0 && (
+								<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+									<span className="text-white/80">Country Restriction Savings</span>
+									<span className="text-white">
+										€
+										{savings.savingsByCountryRestrictions.toLocaleString('en-EU', {
+											maximumFractionDigits: 0,
+										})}
+									</span>
+								</div>
+							)}
+
+							{savings.fleetSavingsByFastChargeBlocking > 0 && (
+								<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+									<span className="text-white/80">Fast Charging Block Savings</span>
+									<span className="text-white">
+										€
+										{savings.fleetSavingsByFastChargeBlocking.toLocaleString('en-EU', {
+											maximumFractionDigits: 0,
+										})}
+									</span>
+								</div>
+							)}
+						</div>
+					</div>
+				)}
 			</div>
 		</main>
 	);
