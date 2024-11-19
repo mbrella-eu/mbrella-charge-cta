@@ -88,189 +88,195 @@ function App() {
 
 	return (
 		<main className="bg-chargePurple text-text font-sora">
-			<div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-				<div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
-					<h1 className="text-2xl sm:text-3xl font-bold mb-6 text-white">Fleet Savings Calculator</h1>
+			<div className="max-w-[1400px] mx-auto p-4 sm:p-6 lg:p-8">
+				<div className="flex flex-col lg:flex-row gap-6">
+					<div className="flex-1 bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+						<h1 className="text-2xl sm:text-3xl font-bold mb-6 text-white">Fleet Savings Calculator</h1>
 
-					<div className="flex flex-col gap-6">
-						<div className="space-y-4">
-							<div className="space-y-2">
-								<label className="text-white text-sm font-medium">
-									What is the number of cars in your fleet?
-								</label>
-								<Input
-									type="number"
-									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
-									{...register('carCount', {
-										valueAsNumber: true,
-										required: { value: true, message: 'This field is required' },
-									})}
-								/>
+						<div className="flex flex-col gap-6">
+							<div className="space-y-4">
+								<div className="space-y-2">
+									<label className="text-white text-sm font-medium">
+										What is the number of cars in your fleet?
+									</label>
+									<Input
+										type="number"
+										className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+										{...register('carCount', {
+											valueAsNumber: true,
+											required: { value: true, message: 'This field is required' },
+										})}
+									/>
+								</div>
+
+								<div className="space-y-2">
+									<label className="text-white text-sm font-medium">
+										What is the number of allowed yearly mileage in your leasing contracts?
+									</label>
+									<Input
+										type="number"
+										className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+										{...register('leasingContractYearlyMileageAllowed', {
+											valueAsNumber: true,
+											required: { value: true, message: 'This field is required' },
+										})}
+									/>
+								</div>
+
+								<div className="space-y-2">
+									<label className="text-white text-sm font-medium">
+										What are the restrictions you want to put in place in your car policy?
+									</label>
+									<Controller
+										name="restrictions"
+										control={control}
+										rules={{ required: true }}
+										render={() => (
+											<MultiSelect
+												options={restrictionOpts}
+												onValueChange={values =>
+													handleRestrictionChange(values as Restriction[])
+												}
+												value={watchRestrictions}
+												className="bg-white/20 border-white/30"
+											/>
+										)}
+									/>
+								</div>
 							</div>
 
-							<div className="space-y-2">
-								<label className="text-white text-sm font-medium">
-									What is the number of allowed yearly mileage in your leasing contracts?
-								</label>
-								<Input
-									type="number"
-									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
-									{...register('leasingContractYearlyMileageAllowed', {
-										valueAsNumber: true,
-										required: { value: true, message: 'This field is required' },
-									})}
-								/>
-							</div>
+							{hasMonthlyBudget && (
+								<div className="animate-fadeIn space-y-2">
+									<label className="text-white text-sm font-medium">
+										What's the monthly charging budget? (in €)
+									</label>
+									<Input
+										type="number"
+										className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+										{...register('monthlyChargingBudget', {
+											valueAsNumber: true,
+											required: { value: true, message: 'This field is required' },
+										})}
+									/>
+								</div>
+							)}
 
-							<div className="space-y-2">
-								<label className="text-white text-sm font-medium">
-									What are the restrictions you want to put in place in your car policy?
-								</label>
-								<Controller
-									name="restrictions"
-									control={control}
-									rules={{ required: true }}
-									render={() => (
-										<MultiSelect
-											options={restrictionOpts}
-											onValueChange={values => handleRestrictionChange(values as Restriction[])}
-											value={watchRestrictions}
-											className="bg-white/20 border-white/30"
-										/>
-									)}
-								/>
+							{hasPriceCap && (
+								<div className="animate-fadeIn space-y-2">
+									<label className="text-white text-sm font-medium">
+										What's the price cap on kWh? (in €)
+									</label>
+									<Input
+										type="number"
+										className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+										{...register('kwhPriceCap', {
+											valueAsNumber: true,
+											validate: val => !hasPriceCap || !!val,
+										})}
+									/>
+								</div>
+							)}
+
+							{watchRestrictions.includes('country_restriction') && (
+								<div className="animate-fadeIn space-y-2">
+									<label className="text-white text-sm font-medium">
+										Which countries are allowed?
+									</label>
+									<Controller
+										name="countryRestrictions"
+										control={control}
+										render={() => (
+											<MultiSelect
+												options={euroCountries.map(country => ({
+													value: country,
+													label:
+														new Intl.DisplayNames(['en'], { type: 'region' }).of(country) ||
+														country,
+												}))}
+												onValueChange={values => {
+													setValue(
+														'countryRestrictions',
+														values as SalesWizardFormInput['countryRestrictions']
+													);
+												}}
+												value={watch('countryRestrictions')}
+												className="bg-white/20 border-white/30"
+											/>
+										)}
+									/>
+								</div>
+							)}
+
+							{watchRestrictions.includes('fast_charging') && (
+								<div className="animate-fadeIn rounded-lg bg-white/5 p-4 text-white">
+									Fast charging is blocked.
+								</div>
+							)}
+						</div>
+					</div>
+
+					{savings && (
+						<div className="lg:w-[400px] bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg animate-fadeIn">
+							<h2 className="text-xl font-bold mb-4 text-white">Estimated Savings</h2>
+							<div className="space-y-3">
+								<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+									<span className="text-white/80">Total Savings</span>
+									<span className="text-white font-bold">
+										€{savings.totalSavings.toLocaleString('en-EU', { maximumFractionDigits: 0 })}
+									</span>
+								</div>
+
+								{savings.totalFleetSavingsByBudget > 0 && (
+									<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+										<span className="text-white/80">Budget-based Savings</span>
+										<span className="text-white">
+											€
+											{savings.totalFleetSavingsByBudget.toLocaleString('en-EU', {
+												maximumFractionDigits: 0,
+											})}
+										</span>
+									</div>
+								)}
+
+								{savings.totalFleetSavingsByPriceCap > 0 && (
+									<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+										<span className="text-white/80">Price Cap Savings</span>
+										<span className="text-white">
+											€
+											{savings.totalFleetSavingsByPriceCap.toLocaleString('en-EU', {
+												maximumFractionDigits: 0,
+											})}
+										</span>
+									</div>
+								)}
+
+								{savings.savingsByCountryRestrictions > 0 && (
+									<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+										<span className="text-white/80">Country Restriction Savings</span>
+										<span className="text-white">
+											€
+											{savings.savingsByCountryRestrictions.toLocaleString('en-EU', {
+												maximumFractionDigits: 0,
+											})}
+										</span>
+									</div>
+								)}
+
+								{savings.fleetSavingsByFastChargeBlocking > 0 && (
+									<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+										<span className="text-white/80">Fast Charging Block Savings</span>
+										<span className="text-white">
+											€
+											{savings.fleetSavingsByFastChargeBlocking.toLocaleString('en-EU', {
+												maximumFractionDigits: 0,
+											})}
+										</span>
+									</div>
+								)}
 							</div>
 						</div>
-
-						{hasMonthlyBudget && (
-							<div className="animate-fadeIn space-y-2">
-								<label className="text-white text-sm font-medium">
-									What's the monthly charging budget? (in €)
-								</label>
-								<Input
-									type="number"
-									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
-									{...register('monthlyChargingBudget', {
-										valueAsNumber: true,
-										required: { value: true, message: 'This field is required' },
-									})}
-								/>
-							</div>
-						)}
-
-						{hasPriceCap && (
-							<div className="animate-fadeIn space-y-2">
-								<label className="text-white text-sm font-medium">
-									What's the price cap on kWh? (in €)
-								</label>
-								<Input
-									type="number"
-									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
-									{...register('kwhPriceCap', {
-										valueAsNumber: true,
-										validate: val => !hasPriceCap || !!val,
-									})}
-								/>
-							</div>
-						)}
-
-						{watchRestrictions.includes('country_restriction') && (
-							<div className="animate-fadeIn space-y-2">
-								<label className="text-white text-sm font-medium">Which countries are allowed?</label>
-								<Controller
-									name="countryRestrictions"
-									control={control}
-									render={() => (
-										<MultiSelect
-											options={euroCountries.map(country => ({
-												value: country,
-												label:
-													new Intl.DisplayNames(['en'], { type: 'region' }).of(country) ||
-													country,
-											}))}
-											onValueChange={values => {
-												setValue(
-													'countryRestrictions',
-													values as SalesWizardFormInput['countryRestrictions']
-												);
-											}}
-											value={watch('countryRestrictions')}
-											className="bg-white/20 border-white/30"
-										/>
-									)}
-								/>
-							</div>
-						)}
-
-						{watchRestrictions.includes('fast_charging') && (
-							<div className="animate-fadeIn rounded-lg bg-white/5 p-4 text-white">
-								Fast charging is blocked.
-							</div>
-						)}
-					</div>
+					)}
 				</div>
-
-				{savings && (
-					<div className="mt-6 bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg animate-fadeIn">
-						<h2 className="text-xl font-bold mb-4 text-white">Estimated Savings</h2>
-						<div className="space-y-3">
-							<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-								<span className="text-white/80">Total Savings</span>
-								<span className="text-white font-bold">
-									€{savings.totalSavings.toLocaleString('en-EU', { maximumFractionDigits: 0 })}
-								</span>
-							</div>
-
-							{savings.totalFleetSavingsByBudget > 0 && (
-								<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-									<span className="text-white/80">Budget-based Savings</span>
-									<span className="text-white">
-										€
-										{savings.totalFleetSavingsByBudget.toLocaleString('en-EU', {
-											maximumFractionDigits: 0,
-										})}
-									</span>
-								</div>
-							)}
-
-							{savings.totalFleetSavingsByPriceCap > 0 && (
-								<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-									<span className="text-white/80">Price Cap Savings</span>
-									<span className="text-white">
-										€
-										{savings.totalFleetSavingsByPriceCap.toLocaleString('en-EU', {
-											maximumFractionDigits: 0,
-										})}
-									</span>
-								</div>
-							)}
-
-							{savings.savingsByCountryRestrictions > 0 && (
-								<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-									<span className="text-white/80">Country Restriction Savings</span>
-									<span className="text-white">
-										€
-										{savings.savingsByCountryRestrictions.toLocaleString('en-EU', {
-											maximumFractionDigits: 0,
-										})}
-									</span>
-								</div>
-							)}
-
-							{savings.fleetSavingsByFastChargeBlocking > 0 && (
-								<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-									<span className="text-white/80">Fast Charging Block Savings</span>
-									<span className="text-white">
-										€
-										{savings.fleetSavingsByFastChargeBlocking.toLocaleString('en-EU', {
-											maximumFractionDigits: 0,
-										})}
-									</span>
-								</div>
-							)}
-						</div>
-					</div>
-				)}
 			</div>
 		</main>
 	);
