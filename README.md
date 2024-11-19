@@ -19,3 +19,9 @@ A React-based calculator widget that helps fleet managers estimate potential sav
 pnpm install
 pnpm run dev
 ```
+
+## To serve it, use jsdelivr
+
+```bash
+https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta@/dist/<name of the file>
+```
