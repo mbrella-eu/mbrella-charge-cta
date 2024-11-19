@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@property --co-gradient-animation-angle {
+	syntax: '<angle>';
+	inherits: false;
+	initial-value: 0deg;
+}
+
+:root {
+	--color-border-spinner-one: #4789e3;
+	--color-border-spinner-two: white;
+}
+
+@layer base {
+  :root {
+		--radius: 0.5rem;
+	}
+}
