@@ -20,8 +20,12 @@ pnpm install
 pnpm run dev
 ```
 
-## To serve it, use jsdelivr
+## Serve it with jsDelivr
 
-```bash
-https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta@/dist/<name of the file>
+```html
+<link
+	rel="stylesheet"
+	href="https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta/dist/assets/index-DwrxFb8S.css"
+/>
+<script src="https://cdn.jsdelivr.net/gh/mbrella-eu/mbrella-charge-cta/dist/assets/index-C1GwmcAG.js"></script>
 ```
