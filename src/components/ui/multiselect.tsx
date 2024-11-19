@@ -1,19 +1,12 @@
 // src/components/multi-select.tsx
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import { CheckIcon, ChevronDown, XCircle, XIcon } from 'lucide-react';
+import { CheckIcon, ChevronDown, XIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandItem,
-	CommandList,
-	CommandSeparator,
-} from '@/components/ui/command';
+import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
@@ -167,13 +160,13 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 										return (
 											<Badge
 												key={value}
-												className={cn(multiSelectVariants({ variant }))}
+												className="bg-accent text-black border-foreground/1"
 												style={{ animationDuration: `${animation}s` }}
 											>
 												{IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
 												{option?.label}
-												<XCircle
-													className="ml-2 h-4 w-4 cursor-pointer"
+												<XIcon
+													className="ml-2 h-4 w-4 cursor-pointer hover:stroke-danger"
 													onClick={event => {
 														event.stopPropagation();
 														toggleOption(value);
@@ -184,15 +177,12 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 									})}
 									{selectedValues.length > maxCount && (
 										<Badge
-											className={cn(
-												'bg-transparent text-foreground border-foreground/1 hover:bg-transparent',
-												multiSelectVariants({ variant })
-											)}
+											className="bg-mbrellaGreen text-foreground border-foreground/1 hover:bg-transparent"
 											style={{ animationDuration: `${animation}s` }}
 										>
 											{`+ ${selectedValues.length - maxCount} more`}
-											<XCircle
-												className="ml-2 h-4 w-4 cursor-pointer"
+											<XIcon
+												className="ml-2 h-4 w-4 cursor-pointer hover:stroke-danger"
 												onClick={event => {
 													event.stopPropagation();
 													clearExtraOptions();
@@ -203,7 +193,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 								</div>
 								<div className="flex items-center justify-between">
 									<XIcon
-										className="h-4 mx-2 cursor-pointer text-muted-foreground"
+										className="h-4 mx-2 cursor-pointer text-muted-foreground hover:stroke-danger"
 										onClick={event => {
 											event.stopPropagation();
 											handleClear();
@@ -223,7 +213,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 				</PopoverTrigger>
 				<PopoverContent className="w-auto p-0" align="start" onEscapeKeyDown={() => setIsPopoverOpen(false)}>
 					<Command>
-						<CommandList>
+						<CommandList className="bg-accent">
 							<CommandEmpty>No results found.</CommandEmpty>
 							<CommandGroup>
 								{options.map(option => {
@@ -237,9 +227,9 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 										>
 											<div
 												className={cn(
-													'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+													'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-mbrellaGreen',
 													isSelected
-														? 'bg-primary text-primary-foreground'
+														? 'bg-mbrellaGreen text-primary-foreground'
 														: 'opacity-50 [&_svg]:invisible'
 												)}
 											>
@@ -253,23 +243,21 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 									);
 								})}
 							</CommandGroup>
-							<CommandSeparator />
 							<CommandGroup>
 								<div className="flex items-center justify-between">
 									{selectedValues.length > 0 && (
 										<>
 											<CommandItem
 												onSelect={handleClear}
-												className="flex-1 justify-center cursor-pointer"
+												className="flex-1 justify-center cursor-pointer bg-accent"
 											>
 												Clear
 											</CommandItem>
-											<Separator orientation="vertical" className="flex min-h-6 h-full" />
 										</>
 									)}
 									<CommandItem
 										onSelect={() => setIsPopoverOpen(false)}
-										className="flex-1 justify-center cursor-pointer max-w-full"
+										className="flex-1 justify-center cursor-pointer max-w-full bg-accent"
 									>
 										Close
 									</CommandItem>

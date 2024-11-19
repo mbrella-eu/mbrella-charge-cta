@@ -18,11 +18,12 @@ const config = {
 			},
 			colors: {
 				chargePurple: '#2f243a',
+				mbrellaGreen: '#32c28e',
 				rootLevel: '#1e2228',
 				secondLevel: '#2b3038',
 				thirdLevel: '#3d5266',
 				primary: '#4789e3',
-				accent: '#e67e55',
+				accent: '#f8b6a6',
 				text: '#e6f0fa',
 				textGray: '#8090a0',
 				okcolor: '#4caf64',

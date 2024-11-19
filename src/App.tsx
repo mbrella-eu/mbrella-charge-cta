@@ -45,8 +45,17 @@ function App() {
 		if (watchedValues.carCount && watchedValues.leasingContractYearlyMileageAllowed) {
 			const savingsResult = computeSavings(watchedValues);
 			setSavings(savingsResult);
+		} else {
+			setSavings(null);
 		}
-	}, [watchedValues]);
+	}, [
+		watchedValues.carCount,
+		watchedValues.leasingContractYearlyMileageAllowed,
+		watchedValues.restrictions,
+		watchedValues.countryRestrictions,
+		watchedValues.monthlyChargingBudget,
+		watchedValues.kwhPriceCap,
+	]);
 
 	const watchRestrictions = watch('restrictions');
 
@@ -81,51 +90,65 @@ function App() {
 		<main className="bg-chargePurple text-text font-sora">
 			<div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
 				<div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
-					<h1 className="text-2xl sm:text-3xl font-bold mb-6 text-white">Fleet Configuration</h1>
+					<h1 className="text-2xl sm:text-3xl font-bold mb-6 text-white">Fleet Savings Calculator</h1>
 
 					<div className="flex flex-col gap-6">
 						<div className="space-y-4">
-							<Input
-								type="number"
-								placeholder="What is the number of cars in your fleet?"
-								className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
-								{...register('carCount', {
-									valueAsNumber: true,
-									required: { value: true, message: 'This field is required' },
-								})}
-							/>
+							<div className="space-y-2">
+								<label className="text-white text-sm font-medium">
+									What is the number of cars in your fleet?
+								</label>
+								<Input
+									type="number"
+									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+									{...register('carCount', {
+										valueAsNumber: true,
+										required: { value: true, message: 'This field is required' },
+									})}
+								/>
+							</div>
 
-							<Input
-								type="number"
-								placeholder="What is the number of allowed yearly mileage in your leasing contracts?"
-								className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
-								{...register('leasingContractYearlyMileageAllowed', {
-									valueAsNumber: true,
-									required: { value: true, message: 'This field is required' },
-								})}
-							/>
+							<div className="space-y-2">
+								<label className="text-white text-sm font-medium">
+									What is the number of allowed yearly mileage in your leasing contracts?
+								</label>
+								<Input
+									type="number"
+									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
+									{...register('leasingContractYearlyMileageAllowed', {
+										valueAsNumber: true,
+										required: { value: true, message: 'This field is required' },
+									})}
+								/>
+							</div>
 
-							<Controller
-								name="restrictions"
-								control={control}
-								rules={{ required: true }}
-								render={() => (
-									<MultiSelect
-										options={restrictionOpts}
-										onValueChange={values => handleRestrictionChange(values as Restriction[])}
-										value={watchRestrictions}
-										placeholder="What are the restrictions you want to put in place in your car policy?"
-										className="bg-white/20 border-white/30"
-									/>
-								)}
-							/>
+							<div className="space-y-2">
+								<label className="text-white text-sm font-medium">
+									What are the restrictions you want to put in place in your car policy?
+								</label>
+								<Controller
+									name="restrictions"
+									control={control}
+									rules={{ required: true }}
+									render={() => (
+										<MultiSelect
+											options={restrictionOpts}
+											onValueChange={values => handleRestrictionChange(values as Restriction[])}
+											value={watchRestrictions}
+											className="bg-white/20 border-white/30"
+										/>
+									)}
+								/>
+							</div>
 						</div>
 
 						{hasMonthlyBudget && (
-							<div className="animate-fadeIn">
+							<div className="animate-fadeIn space-y-2">
+								<label className="text-white text-sm font-medium">
+									What's the monthly charging budget? (in €)
+								</label>
 								<Input
 									type="number"
-									placeholder="What's the monthly charging budget? (in €)"
 									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
 									{...register('monthlyChargingBudget', {
 										valueAsNumber: true,
@@ -136,10 +159,12 @@ function App() {
 						)}
 
 						{hasPriceCap && (
-							<div className="animate-fadeIn">
+							<div className="animate-fadeIn space-y-2">
+								<label className="text-white text-sm font-medium">
+									What's the price cap on kWh? (in €)
+								</label>
 								<Input
 									type="number"
-									placeholder="What's the price cap on kWh? (in €)"
 									className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
 									{...register('kwhPriceCap', {
 										valueAsNumber: true,
@@ -150,9 +175,30 @@ function App() {
 						)}
 
 						{watchRestrictions.includes('country_restriction') && (
-							<div className="animate-fadeIn rounded-lg bg-white/5 p-4">
-								<p className="text-white mb-3">Which countries are allowed?</p>
-								{/* Add a multi-select component for European countries here */}
+							<div className="animate-fadeIn space-y-2">
+								<label className="text-white text-sm font-medium">Which countries are allowed?</label>
+								<Controller
+									name="countryRestrictions"
+									control={control}
+									render={() => (
+										<MultiSelect
+											options={euroCountries.map(country => ({
+												value: country,
+												label:
+													new Intl.DisplayNames(['en'], { type: 'region' }).of(country) ||
+													country,
+											}))}
+											onValueChange={values => {
+												setValue(
+													'countryRestrictions',
+													values as SalesWizardFormInput['countryRestrictions']
+												);
+											}}
+											value={watch('countryRestrictions')}
+											className="bg-white/20 border-white/30"
+										/>
+									)}
+								/>
 							</div>
 						)}
 
@@ -231,7 +277,6 @@ function App() {
 }
 
 const computeSavings = (values: SalesWizardFormInput) => {
-	console.log(values);
 	const hasMonthlyBudget = values.restrictions.includes('monthly_charging_budget');
 	const hasPriceCap = values.restrictions.includes('kwh_price_cap');
 	const hasFastChargingRestriction = values.restrictions.includes('fast_charging');
