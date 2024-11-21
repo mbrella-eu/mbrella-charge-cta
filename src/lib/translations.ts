@@ -23,6 +23,8 @@ export const translations = {
 		errors: {
 			required: 'This field is required',
 			minPrice: 'Price cap must be at least 1',
+			minCarCount: 'Fleet must have at least 1 car',
+			minMileage: 'Yearly mileage must be at least 1',
 		},
 	},
 	'nl-be': {
@@ -49,6 +51,8 @@ export const translations = {
 		errors: {
 			required: 'Dit veld is verplicht',
 			minPrice: 'Prijslimiet moet minimaal 1 zijn',
+			minCarCount: 'Vloot moet minimaal 1 auto hebben',
+			minMileage: 'Jaarkilometrage moet minimaal 1 zijn',
 		},
 	},
 	'fr-be': {
@@ -75,6 +79,8 @@ export const translations = {
 		errors: {
 			required: 'Ce champ est obligatoire',
 			minPrice: "Le plafond de prix doit être d'au moins 1",
+			minCarCount: 'La flotte doit avoir au moins 1 voiture',
+			minMileage: "Le kilométrage annuel doit être d'au moins 1",
 		},
 	},
 } as const;

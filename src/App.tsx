@@ -140,34 +140,64 @@ function App() {
 											<label className="text-white text-sm font-medium">
 												{translations[language].carCountLabel}
 											</label>
-											<Input
-												type="number"
-												className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
-												{...register('carCount', {
-													valueAsNumber: true,
-													required: {
-														value: true,
-														message: translations[language].errors.required,
-													},
-												})}
-											/>
+											<div className="space-y-1">
+												<Input
+													type="number"
+													min="1"
+													className={twMerge(
+														'bg-white/20 border-white/30 placeholder:text-white/70 text-white',
+														errors.carCount && 'border-red-500'
+													)}
+													{...register('carCount', {
+														valueAsNumber: true,
+														required: {
+															value: true,
+															message: translations[language].errors.required,
+														},
+														min: {
+															value: 1,
+															message: translations[language].errors.minCarCount,
+														},
+													})}
+												/>
+												{errors.carCount && (
+													<p className="text-red-500 text-sm animate-fadeIn">
+														{errors.carCount.message}
+													</p>
+												)}
+											</div>
 										</div>
 
 										<div className="space-y-2">
 											<label className="text-white text-sm font-medium">
 												{translations[language].yearlyMileageLabel}
 											</label>
-											<Input
-												type="number"
-												className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
-												{...register('leasingContractYearlyMileageAllowed', {
-													valueAsNumber: true,
-													required: {
-														value: true,
-														message: translations[language].errors.required,
-													},
-												})}
-											/>
+											<div className="space-y-1">
+												<Input
+													type="number"
+													min="1"
+													className={twMerge(
+														'bg-white/20 border-white/30 placeholder:text-white/70 text-white',
+														errors.leasingContractYearlyMileageAllowed && 'border-red-500'
+													)}
+													{...register('leasingContractYearlyMileageAllowed', {
+														valueAsNumber: true,
+														required: {
+															value: true,
+															message: translations[language].errors.required,
+														},
+														min: {
+															value: 1,
+															message: translations[language].errors.minMileage,
+														},
+													})}
+												/>
+												{errors.leasingContractYearlyMileageAllowed && (
+													<p className="text-red-500 text-sm animate-fadeIn">
+														{errors.leasingContractYearlyMileageAllowed.message}
+													</p>
+												)}
+											</div>
 										</div>
 
 										<div className="space-y-2">
