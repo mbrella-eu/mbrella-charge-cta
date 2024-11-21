@@ -121,7 +121,7 @@ function App() {
 	const hasPriceCap = watchRestrictions.includes('kwh_price_cap');
 
 	return (
-		<main className="bg-chargePurple text-text font-sora">
+		<main className="bg-chargePurple text-text font-sora" onClick={e => e.stopPropagation()}>
 			<div className="max-w-[1400px] mx-auto p-4 sm:p-6 lg:p-8">
 				<div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden" role="button">
 					<div
