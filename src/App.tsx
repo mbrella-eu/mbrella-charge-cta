@@ -40,7 +40,13 @@ type SavingsResult = {
 type Language = 'nl-be' | 'fr-be' | 'en';
 
 function App() {
-	const { register, control, watch, setValue } = useForm<SalesWizardFormInput>({
+	const {
+		register,
+		control,
+		watch,
+		setValue,
+		formState: { errors },
+	} = useForm<SalesWizardFormInput>({
 		defaultValues: { restrictions: [], countryRestrictions: [] },
 		mode: 'onChange',
 	});
@@ -139,7 +145,10 @@ function App() {
 												className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
 												{...register('carCount', {
 													valueAsNumber: true,
-													required: { value: true, message: 'This field is required' },
+													required: {
+														value: true,
+														message: translations[language].errors.required,
+													},
 												})}
 											/>
 										</div>
@@ -153,7 +162,10 @@ function App() {
 												className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
 												{...register('leasingContractYearlyMileageAllowed', {
 													valueAsNumber: true,
-													required: { value: true, message: 'This field is required' },
+													required: {
+														value: true,
+														message: translations[language].errors.required,
+													},
 												})}
 											/>
 										</div>
@@ -190,7 +202,10 @@ function App() {
 												className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
 												{...register('monthlyChargingBudget', {
 													valueAsNumber: true,
-													required: { value: true, message: 'This field is required' },
+													required: {
+														value: true,
+														message: translations[language].errors.required,
+													},
 												})}
 											/>
 										</div>
@@ -201,14 +216,29 @@ function App() {
 											<label className="text-white text-sm font-medium">
 												{translations[language].kwhPriceCapLabel}
 											</label>
-											<Input
-												type="number"
-												className="bg-white/20 border-white/30 placeholder:text-white/70 text-white"
-												{...register('kwhPriceCap', {
-													valueAsNumber: true,
-													validate: val => !hasPriceCap || !!val,
-												})}
-											/>
+											<div className="space-y-1">
+												<Input
+													type="number"
+													min="1"
+													className={twMerge(
+														'bg-white/20 border-white/30 placeholder:text-white/70 text-white',
+														errors.kwhPriceCap && 'border-red-500'
+													)}
+													{...register('kwhPriceCap', {
+														valueAsNumber: true,
+														validate: val => !hasPriceCap || (!!val && val >= 1),
+														min: {
+															value: 1,
+															message: translations[language].errors.minPrice,
+														},
+													})}
+												/>
+												{errors.kwhPriceCap && (
+													<p className="text-red-500 text-sm animate-fadeIn">
+														{errors.kwhPriceCap.message}
+													</p>
+												)}
+											</div>
 										</div>
 									)}
 

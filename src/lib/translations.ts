@@ -20,6 +20,10 @@ export const translations = {
 			countryRestriction: 'Country restriction',
 			fastCharging: 'Block fast charging',
 		},
+		errors: {
+			required: 'This field is required',
+			minPrice: 'Price cap must be at least 1',
+		},
 	},
 	'nl-be': {
 		title: 'Vlootbesparingscalculator',
@@ -42,6 +46,10 @@ export const translations = {
 			countryRestriction: 'Landbeperking',
 			fastCharging: 'Snelladen blokkeren',
 		},
+		errors: {
+			required: 'Dit veld is verplicht',
+			minPrice: 'Prijslimiet moet minimaal 1 zijn',
+		},
 	},
 	'fr-be': {
 		title: "Calculateur d'économies de flotte",
@@ -63,6 +71,10 @@ export const translations = {
 			kwhPriceCap: 'Plafond de prix par kWh',
 			countryRestriction: 'Restriction par pays',
 			fastCharging: 'Bloquer la recharge rapide',
+		},
+		errors: {
+			required: 'Ce champ est obligatoire',
+			minPrice: "Le plafond de prix doit être d'au moins 1",
 		},
 	},
 } as const;
