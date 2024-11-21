@@ -14,6 +14,9 @@ export const translations = {
 		pricecapSavings: 'Price Cap Savings',
 		countryRestrictionSavings: 'Country Restriction Savings',
 		fastChargingSavings: 'Fast Charging Block Savings',
+		sparedWorkingDays: 'Spared Working Days',
+		avoidedComplaints: 'Avoided Complaints',
+		returnOnInvestment: 'Return on Investment',
 		restrictions: {
 			monthlyChargingBudget: 'Monthly charging budget',
 			kwhPriceCap: 'Price cap on kwh',
@@ -22,7 +25,7 @@ export const translations = {
 		},
 		errors: {
 			required: 'This field is required',
-			minPrice: 'Price cap must be at least 1',
+			minPrice: 'Price cap must be above 0',
 			minCarCount: 'Fleet must have at least 1 car',
 			minMileage: 'Yearly mileage must be at least 1',
 		},
@@ -42,6 +45,9 @@ export const translations = {
 		pricecapSavings: 'Prijslimiet besparingen',
 		countryRestrictionSavings: 'Landbeperking besparingen',
 		fastChargingSavings: 'Snellaad blokkering besparingen',
+		sparedWorkingDays: 'Besparingen vrijgekomen werkdagen',
+		avoidedComplaints: 'Voorkomen klachten',
+		returnOnInvestment: 'Terugverdientijd',
 		restrictions: {
 			monthlyChargingBudget: 'Maandelijks laadbudget',
 			kwhPriceCap: 'Prijslimiet per kWh',
@@ -50,7 +56,7 @@ export const translations = {
 		},
 		errors: {
 			required: 'Dit veld is verplicht',
-			minPrice: 'Prijslimiet moet minimaal 1 zijn',
+			minPrice: 'Prijslimiet moet groter zijn dan 0',
 			minCarCount: 'Vloot moet minimaal 1 auto hebben',
 			minMileage: 'Jaarkilometrage moet minimaal 1 zijn',
 		},
@@ -70,6 +76,9 @@ export const translations = {
 		pricecapSavings: 'Économies sur le plafond de prix',
 		countryRestrictionSavings: 'Économies sur les restrictions par pays',
 		fastChargingSavings: 'Économies sur le blocage de recharge rapide',
+		sparedWorkingDays: 'Besparingen vrijgekomen werkdagen',
+		avoidedComplaints: 'Voorkomen klachten',
+		returnOnInvestment: 'Terugverdientijd',
 		restrictions: {
 			monthlyChargingBudget: 'Budget de recharge mensuel',
 			kwhPriceCap: 'Plafond de prix par kWh',
@@ -78,7 +87,7 @@ export const translations = {
 		},
 		errors: {
 			required: 'Ce champ est obligatoire',
-			minPrice: "Le plafond de prix doit être d'au moins 1",
+			minPrice: 'Le plafond de prix doit être supérieur à 0',
 			minCarCount: 'La flotte doit avoir au moins 1 voiture',
 			minMileage: "Le kilométrage annuel doit être d'au moins 1",
 		},

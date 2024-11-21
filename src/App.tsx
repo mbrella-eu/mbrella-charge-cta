@@ -35,6 +35,9 @@ type SavingsResult = {
 	totalFleetSavingsByPriceCap: number;
 	savingsByCountryRestrictions: number;
 	fleetSavingsByFastChargeBlocking: number;
+	returnOnInvesmentApprox: number;
+	sparedWorkingDaysApprox: number;
+	avoidedComplaintsApprox: number;
 };
 
 type Language = 'nl-be' | 'fr-be' | 'en';
@@ -108,7 +111,7 @@ function App() {
 				})
 			);
 		} else {
-			setRestrictionOpts(restrictionOpts);
+			setRestrictionOpts(restrictionOpts.map(r => ({ ...r, disabled: false })));
 		}
 
 		setValue('restrictions', newRestrictions);
@@ -256,9 +259,9 @@ function App() {
 													)}
 													{...register('kwhPriceCap', {
 														valueAsNumber: true,
-														validate: val => !hasPriceCap || (!!val && val >= 1),
+														validate: val => !hasPriceCap || (!!val && val > 0),
 														min: {
-															value: 1,
+															value: 0.01,
 															message: translations[language].errors.minPrice,
 														},
 													})}
@@ -382,6 +385,45 @@ function App() {
 												</span>
 											</div>
 										)}
+										{savings.sparedWorkingDaysApprox > 0 && (
+											<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-accent/80">
+												<span className="text-white/80">
+													{translations[language].sparedWorkingDays}
+												</span>
+												<span className="text-white">
+													€
+													{savings.sparedWorkingDaysApprox.toLocaleString('en-EU', {
+														maximumFractionDigits: 0,
+													})}
+												</span>
+											</div>
+										)}
+										{savings.returnOnInvesmentApprox > 0 && (
+											<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-accent/80">
+												<span className="text-white/80">
+													{translations[language].returnOnInvestment}
+												</span>
+												<span className="text-white">
+													€
+													{savings.returnOnInvesmentApprox.toLocaleString('en-EU', {
+														maximumFractionDigits: 0,
+													})}
+												</span>
+											</div>
+										)}
+										{savings.avoidedComplaintsApprox > 0 && (
+											<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-accent/80">
+												<span className="text-white/80">
+													{translations[language].avoidedComplaints}
+												</span>
+												<span className="text-white">
+													€
+													{savings.avoidedComplaintsApprox.toLocaleString('en-EU', {
+														maximumFractionDigits: 0,
+													})}
+												</span>
+											</div>
+										)}
 									</div>
 								</div>
 							)}
@@ -444,12 +486,28 @@ const computeSavings = (values: SalesWizardFormInput) => {
 		fleetSavingsByFastChargeBlocking +
 		values.carCount * 78; // fraud savings
 
+	// 1. Spared working days: in the Volteum example, they count 520 EUR/day (830/16) - it could be similar here, I suppose
+	// --> Working days: you could use 520 indeed and take 5min/driver/month in the formula
+	const sparedWorkingDaysApprox = (totalSavings / values.carCount) * 520;
+
+	// 2. ROI: Depends on which plan they would take, but let's say the formula would be:[YEARLY SAVINGS] / [FLEET SIZE] * [Price per User] * 12
+	// Maybe here we could go for the subscription price of 5 EUR/month?
+	// --> ROI: OK
+	const returnOnInvesmentApprox = (totalSavings / values.carCount) * 5 * 12;
+
+	// 3. Avoided complaints: that's definitely a guess, so if we say this is [YEARLY SAVINGS/160], we'd have a similar amount to theirs.
+	// --> This should be in numbers, EDI has 50000 users/1000 tickets/day= 50*280 workdays
+	const avoidedComplaintsApprox = totalSavings / 160;
+
 	return {
 		totalSavings,
 		totalFleetSavingsByBudget,
 		totalFleetSavingsByPriceCap,
 		savingsByCountryRestrictions,
 		fleetSavingsByFastChargeBlocking,
+		returnOnInvesmentApprox,
+		sparedWorkingDaysApprox,
+		avoidedComplaintsApprox,
 	};
 };
 
