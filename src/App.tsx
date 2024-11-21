@@ -59,12 +59,19 @@ function App() {
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	useEffect(() => {
-		const url = window.location.href.toLowerCase();
-		if (url.includes('nl-be')) {
-			setLanguage('nl-be');
-		} else if (url.includes('fr-be')) {
-			setLanguage('fr-be');
-		} else {
+		return () => {
+			setSavings(null);
+			setIsExpanded(false);
+		};
+	}, []);
+
+	useEffect(() => {
+		try {
+			const url = window.location.href.toLowerCase();
+			const newLanguage = url.includes('nl-be') ? 'nl-be' : url.includes('fr-be') ? 'fr-be' : 'en';
+			setLanguage(newLanguage);
+		} catch (error) {
+			console.error('Language detection failed:', error);
 			setLanguage('en');
 		}
 	}, []);
