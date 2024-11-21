@@ -153,7 +153,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 					>
 						{selectedValues.length > 0 ? (
 							<div className="flex justify-between items-center w-full">
-								<div className="flex flex-wrap items-center">
+								<div className="flex flex-wrap items-center gap-2">
 									{selectedValues.slice(0, maxCount).map(value => {
 										const option = options.find(o => o.value === value);
 										const IconComponent = option?.icon;
