@@ -48,6 +48,7 @@ const config = {
 			},
 		},
 	},
+	important: '.charge.sales.widget',
 	plugins: [require('tailwindcss-animate')],
 } satisfies Config;
 
