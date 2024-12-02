@@ -129,7 +129,7 @@ function App() {
 	const hasPriceCap = watchRestrictions.includes('kwh_price_cap');
 
 	return (
-		<main className="charge sales widget" onClick={e => e.stopPropagation()}>
+		<main className="charge sales widget" style={{ backgroundColor: '#2f243a' }} onClick={e => e.stopPropagation()}>
 			<div className="text-text font-sora bg-chargePurple max-w-[1400px] mx-auto p-4 sm:p-6 lg:p-8">
 				<div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden" role="button">
 					<div
