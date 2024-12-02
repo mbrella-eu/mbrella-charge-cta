@@ -398,7 +398,6 @@ function App() {
 													{translations[language].sparedWorkingDays}
 												</span>
 												<span className="text-white">
-													€
 													{savings.sparedWorkingDaysApprox.toLocaleString('en-EU', {
 														maximumFractionDigits: 0,
 													})}
@@ -424,7 +423,6 @@ function App() {
 													{translations[language].avoidedComplaints}
 												</span>
 												<span className="text-white">
-													€
 													{savings.avoidedComplaintsApprox.toLocaleString('en-EU', {
 														maximumFractionDigits: 0,
 													})}
@@ -457,8 +455,8 @@ const computeSavings = (values: SalesWizardFormInput) => {
 	// IF "price cap on kWh": ((0,65 - kwh_price_cap) * mileage * 0,2 = savings by price cap/car/year) * car_count = total fleet savings by price cap
 	if (hasMonthlyBudget && values.monthlyChargingBudget) {
 		totalFleetSavingsByBudget =
-			values.leasingContractYearlyMileageAllowed * 0.2 * 0.45 -
-			12 * values.monthlyChargingBudget * values.carCount;
+			(values.leasingContractYearlyMileageAllowed * 0.2 * 0.45 - 12 * values.monthlyChargingBudget) *
+			values.carCount;
 	}
 
 	if (hasPriceCap && values.kwhPriceCap) {
@@ -495,7 +493,7 @@ const computeSavings = (values: SalesWizardFormInput) => {
 
 	// 1. Spared working days: in the Volteum example, they count 520 EUR/day (830/16) - it could be similar here, I suppose
 	// --> Working days: you could use 520 indeed and take 5min/driver/month in the formula
-	const sparedWorkingDaysApprox = (totalSavings / values.carCount) * 520;
+	const sparedWorkingDaysApprox = totalSavings / 520;
 
 	// 2. ROI: Depends on which plan they would take, but let's say the formula would be:[YEARLY SAVINGS] / [FLEET SIZE] * [Price per User] * 12
 	// Maybe here we could go for the subscription price of 5 EUR/month?
