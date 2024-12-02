@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import { isolateInsideOfContainer, scopedPreflightStyles } from 'tailwindcss-scoped-preflight';
 
 const config = {
 	darkMode: ['class'],
@@ -49,7 +50,12 @@ const config = {
 		},
 	},
 	important: '.charge.sales.widget',
-	plugins: [require('tailwindcss-animate')],
+	plugins: [
+		require('tailwindcss-animate'),
+		scopedPreflightStyles({
+			isolationStrategy: isolateInsideOfContainer('.charge.sales.widget'),
+		}),
+	],
 } satisfies Config;
 
 export default config;

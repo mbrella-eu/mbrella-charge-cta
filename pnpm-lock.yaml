@@ -93,6 +93,9 @@ importers:
       tailwindcss:
         specifier: ^3.4.13
         version: 3.4.13
+      tailwindcss-scoped-preflight:
+        specifier: ^3.4.9
+        version: 3.4.9(postcss@8.4.47)(tailwindcss@3.4.13)
       typescript:
         specifier: ^5.5.3
         version: 5.6.3
@@ -1791,6 +1794,12 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
+  tailwindcss-scoped-preflight@3.4.9:
+    resolution: {integrity: sha512-OyTnuNp5vwXtGi+d13GUftSQYLK5OTSPy365xG0b7ga1mkpOD6ucKWtU0g29wmNaUCsh/XDKjnIsYnF5CFiEDg==}
+    peerDependencies:
+      postcss: ^8
+      tailwindcss: ^3
+
   tailwindcss@3.4.13:
     resolution: {integrity: sha512-KqjHOJKogOUt5Bs752ykCeiwvi0fKVkr5oqsFNt/8px/tA8scFPIlkygsf6jXrfCqGHz7VflA6+yytWuM+XhFw==}
     engines: {node: '>=14.0.0'}
@@ -3410,6 +3419,11 @@ snapshots:
 
   tailwindcss-animate@1.0.7(tailwindcss@3.4.13):
     dependencies:
+      tailwindcss: 3.4.13
+
+  tailwindcss-scoped-preflight@3.4.9(postcss@8.4.47)(tailwindcss@3.4.13):
+    dependencies:
+      postcss: 8.4.47
       tailwindcss: 3.4.13
 
   tailwindcss@3.4.13:
