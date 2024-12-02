@@ -38,6 +38,7 @@ type SavingsResult = {
 	returnOnInvesmentApprox: number;
 	sparedWorkingDaysApprox: number;
 	avoidedComplaintsApprox: number;
+	fraudSavings: number;
 };
 
 type Language = 'nl-be' | 'fr-be' | 'en';
@@ -327,8 +328,10 @@ function App() {
 										{translations[language].estimatedSavings}
 									</h2>
 									<div className="space-y-3">
-										<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-											<span className="text-white/80">{translations[language].totalSavings}</span>
+										<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border">
+											<span className="text-white/80 font-bold">
+												{translations[language].totalSavings}
+											</span>
 											<span className="text-white font-bold">
 												€
 												{savings.totalSavings.toLocaleString('en-EU', {
@@ -336,6 +339,20 @@ function App() {
 												})}
 											</span>
 										</div>
+
+										{savings.fraudSavings > 0 && (
+											<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+												<span className="text-white/80">
+													{translations[language].fraudSavings}
+												</span>
+												<span className="text-white font-bold">
+													€
+													{savings.fraudSavings.toLocaleString('en-EU', {
+														maximumFractionDigits: 0,
+													})}
+												</span>
+											</div>
+										)}
 
 										{savings.totalFleetSavingsByBudget > 0 && (
 											<div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
@@ -455,7 +472,7 @@ const computeSavings = (values: SalesWizardFormInput) => {
 	// IF "price cap on kWh": ((0,65 - kwh_price_cap) * mileage * 0,2 = savings by price cap/car/year) * car_count = total fleet savings by price cap
 	if (hasMonthlyBudget && values.monthlyChargingBudget) {
 		totalFleetSavingsByBudget =
-			(values.leasingContractYearlyMileageAllowed * 0.2 * 0.45 - 12 * values.monthlyChargingBudget) *
+			Math.max(0, values.leasingContractYearlyMileageAllowed * 0.2 * 0.45 - 12 * values.monthlyChargingBudget) *
 			values.carCount;
 	}
 
@@ -484,16 +501,17 @@ const computeSavings = (values: SalesWizardFormInput) => {
 			values.leasingContractYearlyMileageAllowed * 0.3 * 0.2 * 0.4 * values.carCount;
 	}
 
+	const fraudSavings = values.carCount * 78;
+
 	const totalSavings =
 		totalFleetSavingsByBudget +
 		totalFleetSavingsByPriceCap +
 		savingsByCountryRestrictions +
 		fleetSavingsByFastChargeBlocking +
-		values.carCount * 78; // fraud savings
+		fraudSavings;
 
-	// 1. Spared working days: in the Volteum example, they count 520 EUR/day (830/16) - it could be similar here, I suppose
-	// --> Working days: you could use 520 indeed and take 5min/driver/month in the formula
-	const sparedWorkingDaysApprox = totalSavings / 520;
+	// Assumption: Fleet manager spends 1 hour per car per year
+	const sparedWorkingDaysApprox = values.carCount / 24;
 
 	// 2. ROI: Depends on which plan they would take, but let's say the formula would be:[YEARLY SAVINGS] / [FLEET SIZE] * [Price per User] * 12
 	// Maybe here we could go for the subscription price of 5 EUR/month?
@@ -510,6 +528,7 @@ const computeSavings = (values: SalesWizardFormInput) => {
 		totalFleetSavingsByPriceCap,
 		savingsByCountryRestrictions,
 		fleetSavingsByFastChargeBlocking,
+		fraudSavings,
 		returnOnInvesmentApprox,
 		sparedWorkingDaysApprox,
 		avoidedComplaintsApprox,
