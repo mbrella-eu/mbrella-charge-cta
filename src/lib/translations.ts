@@ -30,6 +30,8 @@ export const translations = {
 			minCarCount: 'Fleet must have at least 1 car',
 			minMileage: 'Yearly mileage must be at least 1',
 		},
+		disclaimer:
+			'This calculator is for illustrative purposes only. For more information and detailed calculations, please contact us.',
 	},
 	'nl-be': {
 		title: 'Vlootbesparingscalculator',
@@ -62,6 +64,8 @@ export const translations = {
 			minCarCount: 'Vloot moet minimaal 1 auto hebben',
 			minMileage: 'Jaarkilometrage moet minimaal 1 zijn',
 		},
+		disclaimer:
+			'Deze calculator is alleen ter illustratie. Voor meer informatie en gedetailleerde berekeningen, neem contact met ons op.',
 	},
 	'fr-be': {
 		title: "Calculateur d'économies de flotte",
@@ -94,6 +98,8 @@ export const translations = {
 			minCarCount: 'La flotte doit avoir au moins 1 voiture',
 			minMileage: "Le kilométrage annuel doit être d'au moins 1",
 		},
+		disclaimer:
+			"Ce calculateur est uniquement pour illustration. Pour plus d'informations et des calculs détaillés, veuillez nous contacter.",
 	},
 } as const;
 

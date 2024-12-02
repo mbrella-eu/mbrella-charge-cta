@@ -1,4 +1,4 @@
-import { BatteryWarning, ChevronLeft, HandCoins, MapPinned, PlugZap } from 'lucide-react';
+import { BatteryWarning, HandCoins, MapPinned, PlugZap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
@@ -84,6 +84,10 @@ function App() {
 	const watchedValues = watch();
 
 	useEffect(() => {
+		if (watchedValues.carCount) setIsExpanded(true);
+	}, [watchedValues.carCount]);
+
+	useEffect(() => {
 		if (watchedValues.carCount && watchedValues.leasingContractYearlyMileageAllowed) {
 			const savingsResult = computeSavings(watchedValues);
 			setSavings(savingsResult);
@@ -132,53 +136,45 @@ function App() {
 		<main className="charge sales widget" style={{ backgroundColor: '#2f243a' }} onClick={e => e.stopPropagation()}>
 			<div className="text-text font-sora bg-chargePurple max-w-[1400px] mx-auto p-4 sm:p-6 lg:p-8">
 				<div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden" role="button">
-					<div
-						className="p-6 flex justify-between items-center cursor-pointer"
-						onClick={() => setIsExpanded(!isExpanded)}
-					>
+					<div className="p-6 flex justify-between items-center cursor-pointer">
 						<h1 className="text-2xl sm:text-3xl font-bold text-white">{translations[language].title}</h1>
-						<ChevronLeft
-							className={twMerge('text-white w-6 h-6 transition-transform', isExpanded && '-rotate-90')}
-						/>
 					</div>
-
+					<div className="px-6 pb-6">
+						<div className="space-y-2">
+							<label className="text-white text-sm font-medium">
+								{translations[language].carCountLabel}
+							</label>
+							<div className="space-y-1">
+								<Input
+									type="number"
+									min="1"
+									className={twMerge(
+										'bg-white/20 border-white/30 placeholder:text-white/70 text-white',
+										errors.carCount && 'border-red-500'
+									)}
+									{...register('carCount', {
+										valueAsNumber: true,
+										required: {
+											value: true,
+											message: translations[language].errors.required,
+										},
+										min: {
+											value: 1,
+											message: translations[language].errors.minCarCount,
+										},
+									})}
+								/>
+								{errors.carCount && (
+									<p className="text-red-500 text-sm animate-fadeIn">{errors.carCount.message}</p>
+								)}
+							</div>
+						</div>
+					</div>
 					{isExpanded && (
 						<div className="flex flex-col lg:flex-row gap-6 p-6 pt-0">
 							<div className="flex-1">
 								<div className="flex flex-col gap-6">
 									<div className="space-y-4">
-										<div className="space-y-2">
-											<label className="text-white text-sm font-medium">
-												{translations[language].carCountLabel}
-											</label>
-											<div className="space-y-1">
-												<Input
-													type="number"
-													min="1"
-													className={twMerge(
-														'bg-white/20 border-white/30 placeholder:text-white/70 text-white',
-														errors.carCount && 'border-red-500'
-													)}
-													{...register('carCount', {
-														valueAsNumber: true,
-														required: {
-															value: true,
-															message: translations[language].errors.required,
-														},
-														min: {
-															value: 1,
-															message: translations[language].errors.minCarCount,
-														},
-													})}
-												/>
-												{errors.carCount && (
-													<p className="text-red-500 text-sm animate-fadeIn">
-														{errors.carCount.message}
-													</p>
-												)}
-											</div>
-										</div>
-
 										<div className="space-y-2">
 											<label className="text-white text-sm font-medium">
 												{translations[language].yearlyMileageLabel}
@@ -321,7 +317,6 @@ function App() {
 									)}
 								</div>
 							</div>
-
 							{savings && (
 								<div className="lg:w-[400px] bg-white/10 rounded-xl p-6 shadow-lg animate-fadeIn">
 									<h2 className="text-xl font-bold mb-4 text-white">
@@ -451,6 +446,9 @@ function App() {
 							)}
 						</div>
 					)}
+					<div className="p-6 flex justify-start text-sm text-gray-400">
+						{translations[language].disclaimer}
+					</div>
 				</div>
 			</div>
 		</main>
