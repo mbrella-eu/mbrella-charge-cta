@@ -345,7 +345,7 @@ function App() {
 												<span className="text-white/80">
 													{translations[language].fraudSavings}
 												</span>
-												<span className="text-white font-bold">
+												<span className="text-white">
 													€
 													{savings.fraudSavings.toLocaleString('en-EU', {
 														maximumFractionDigits: 0,
@@ -516,7 +516,7 @@ const computeSavings = (values: SalesWizardFormInput) => {
 	// 2. ROI: Depends on which plan they would take, but let's say the formula would be:[YEARLY SAVINGS] / [FLEET SIZE] * [Price per User] * 12
 	// Maybe here we could go for the subscription price of 5 EUR/month?
 	// --> ROI: OK
-	const returnOnInvesmentApprox = (totalSavings / values.carCount) * 5 * 12;
+	const returnOnInvesmentApprox = totalSavings - 5 * 12 * values.carCount;
 
 	// 3. Avoided complaints: that's definitely a guess, so if we say this is [YEARLY SAVINGS/160], we'd have a similar amount to theirs.
 	// --> This should be in numbers, EDI has 50000 users/1000 tickets/day= 50*280 workdays
