@@ -268,6 +268,10 @@ function App() {
 															value: 0.01,
 															message: translations[language].errors.minPrice,
 														},
+														max: {
+															value: 0.65,
+															message: translations[language].errors.maxPriceCap,
+														},
 													})}
 												/>
 												{errors.kwhPriceCap && (
@@ -476,7 +480,7 @@ const computeSavings = (values: SalesWizardFormInput) => {
 
 	if (hasPriceCap && values.kwhPriceCap) {
 		totalFleetSavingsByPriceCap =
-			values.kwhPriceCap * 0.65 * values.leasingContractYearlyMileageAllowed * 0.2 * values.carCount;
+			(0.65 - values.kwhPriceCap) * values.leasingContractYearlyMileageAllowed * 0.2 * values.carCount;
 	}
 
 	// • Determine "country restrictions":

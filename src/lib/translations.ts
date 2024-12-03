@@ -29,6 +29,7 @@ export const translations = {
 			minPrice: 'Price cap must be above 0',
 			minCarCount: 'Fleet must have at least 1 car',
 			minMileage: 'Yearly mileage must be at least 1',
+			maxPriceCap: 'Price cap maximum',
 		},
 		disclaimer:
 			'This calculator is for illustrative purposes only. For more information and detailed calculations, please contact us.',
@@ -63,6 +64,7 @@ export const translations = {
 			minPrice: 'Prijslimiet moet groter zijn dan 0',
 			minCarCount: 'Vloot moet minimaal 1 auto hebben',
 			minMileage: 'Jaarkilometrage moet minimaal 1 zijn',
+			maxPriceCap: 'Prijslimiet maximum',
 		},
 		disclaimer:
 			'Deze calculator is alleen ter illustratie. Voor meer informatie en gedetailleerde berekeningen, neem contact met ons op.',
@@ -97,6 +99,7 @@ export const translations = {
 			minPrice: 'Le plafond de prix doit être supérieur à 0',
 			minCarCount: 'La flotte doit avoir au moins 1 voiture',
 			minMileage: "Le kilométrage annuel doit être d'au moins 1",
+			maxPriceCap: 'Plafond de prix maximum',
 		},
 		disclaimer:
 			"Ce calculateur est uniquement pour illustration. Pour plus d'informations et des calculs détaillés, veuillez nous contacter.",
